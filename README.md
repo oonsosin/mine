@@ -23,3 +23,9 @@ The frontend and CLI client for [Mineral](https://mineral.supply/).
 
 ### Build
 - `npm run build`
+
+### Start parallelly
+```
+--threads nums
+--bulk_size nums
+```
