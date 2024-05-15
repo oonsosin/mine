@@ -174,6 +174,11 @@ program
     .description('Start mining ⛏️')
     .action((_options) =>
         (async () => {
+            if (_options.key) {
+                settings.wallet = Ed25519Keypair.fromSecretKey(
+                    decodeSuiPrivateKey(WALLET).secretKey
+                );
+            }
             if (!settings.wallet) {
                 return program.error(SETUP_PROMPT);
             }
@@ -198,11 +203,6 @@ program
                 chalk.green('Mining with wallet:'),
                 settings.wallet.toSuiAddress()
             );
-            if (_options.key) {
-                settings.wallet = Ed25519Keypair.fromSecretKey(
-                    decodeSuiPrivateKey(WALLET).secretKey
-                );
-            }
             const minerAccount = await getOrCreateMiner(
                 settings.wallet,
                 settings.rpc
