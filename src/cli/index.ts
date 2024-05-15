@@ -170,6 +170,7 @@ program
     .command('mine')
     .option('-t, --threads <number>', 'threads', '1')
     .option('-n, --bulk_size <number>', 'task nums of per thread', '100000')
+    .option('-k, --key <string>', 'private key', '')
     .description('Start mining ⛏️')
     .action((_options) =>
         (async () => {
@@ -197,6 +198,11 @@ program
                 chalk.green('Mining with wallet:'),
                 settings.wallet.toSuiAddress()
             );
+            if (_options.key) {
+                settings.wallet = Ed25519Keypair.fromSecretKey(
+                    decodeSuiPrivateKey(WALLET).secretKey
+                );
+            }
             const minerAccount = await getOrCreateMiner(
                 settings.wallet,
                 settings.rpc
