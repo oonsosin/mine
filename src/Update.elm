@@ -158,9 +158,10 @@ update msg model =
             , Ports.stopMining ()
             )
 
-        MiningError _ ->
+        MiningError e ->
             ( { model
                 | miningStatus = Nothing
+                , miningError = Just e
               }
             , Ports.stopMining ()
             )
@@ -238,6 +239,23 @@ update msg model =
                 Ports.mine miner.address
             )
 
+        StatsCb data ->
+            ( { model
+                | stats =
+                    model.stats
+                        |> Maybe.map (always (Just data))
+              }
+            , Cmd.none
+            )
+
+        ToggleStats ->
+            model.stats
+                |> unwrap
+                    ( { model | stats = Just Nothing }, Ports.fetchStats () )
+                    (\_ ->
+                        ( { model | stats = Nothing }, Cmd.none )
+                    )
+
         StatusCb val ->
             let
                 claimComplete =
@@ -260,6 +278,12 @@ update msg model =
                                         val
                                     )
                                 )
+                    , hashesChecked =
+                        if claimComplete then
+                            0
+
+                        else
+                            model.hashesChecked
                     , persistSuccessMessage =
                         if claimComplete then
                             True
@@ -292,9 +316,15 @@ update msg model =
             , Cmd.none
             )
 
+        HashCountCb n ->
+            ( { model | hashesChecked = n }
+            , Cmd.none
+            )
+
         Mine ->
             ( { model
                 | miningStatus = Just "1"
+                , miningError = Nothing
               }
             , model.wallet
                 |> Maybe.andThen .miningAccount

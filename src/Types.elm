@@ -20,6 +20,9 @@ type alias Model =
     , addressInput : String
     , proof : Maybe Proof
     , currentTime : Int
+    , miningError : Maybe String
+    , hashesChecked : Int
+    , stats : Maybe (Maybe Ports.Stats)
     }
 
 
@@ -38,6 +41,7 @@ type Msg
     | SetView View
     | AddressInputCh String
     | ClaimInputCh String
+    | HashCountCb Int
     | ToggleMax
     | ClaimMax
     | ClaimRes (Result String String)
@@ -49,7 +53,9 @@ type Msg
     | ProofCb Proof
     | RetrySubmitProof { proof : Proof, miner : String }
     | MiningError String
+    | StatsCb Ports.Stats
     | Tick Int
+    | ToggleStats
 
 
 type alias Flags =

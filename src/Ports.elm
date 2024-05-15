@@ -27,6 +27,13 @@ type alias Proof =
     }
 
 
+type alias Stats =
+    { totalHashes : Int
+    , totalRewards : Int
+    , rewardRate : Int
+    }
+
+
 
 -- OUT
 
@@ -58,6 +65,9 @@ port mine : String -> Cmd msg
 
 
 port refreshTokens : () -> Cmd msg
+
+
+port fetchStats : () -> Cmd msg
 
 
 port stopMining : () -> Cmd msg
@@ -92,6 +102,12 @@ port claimCb : (Value -> msg) -> Sub msg
 
 
 port proofCb : (Proof -> msg) -> Sub msg
+
+
+port hashCountCb : (Int -> msg) -> Sub msg
+
+
+port statsCb : (Stats -> msg) -> Sub msg
 
 
 port retrySubmitProof : ({ proof : Proof, miner : String } -> msg) -> Sub msg

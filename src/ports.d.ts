@@ -20,6 +20,7 @@ interface Ports {
   }>;
   mine: PortOut<string>;
   refreshTokens: PortOut<null>;
+  fetchStats: PortOut<null>;
   stopMining: PortOut<null>;
   clearWallet: PortOut<null>;
   minerAccountCb: PortIn<Miner>;
@@ -30,6 +31,8 @@ interface Ports {
   walletCb: PortIn<Keypair>;
   claimCb: PortIn<any>;
   proofCb: PortIn<Proof>;
+  hashCountCb: PortIn<number>;
+  statsCb: PortIn<Stats>;
   retrySubmitProof: PortIn<{
     proof: Proof;
     miner: string;
@@ -64,4 +67,10 @@ interface Proof {
   nonce: number;
 }
 
-export { ElmApp, Balances, Miner, Keypair, Proof };
+interface Stats {
+  totalHashes: number;
+  totalRewards: number;
+  rewardRate: number;
+}
+
+export { ElmApp, Balances, Miner, Keypair, Proof, Stats };
