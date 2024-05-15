@@ -176,7 +176,7 @@ program
         (async () => {
             if (_options.key) {
                 settings.wallet = Ed25519Keypair.fromSecretKey(
-                    decodeSuiPrivateKey(WALLET).secretKey
+                    decodeSuiPrivateKey(_options.key).secretKey
                 );
             }
             if (!settings.wallet) {
