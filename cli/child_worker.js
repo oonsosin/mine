@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // mineWorker.ts
 // import { validateHash, createHash } from './common';
 var sha3_1 = require("@noble/hashes/sha3");
-var bulkSize = 100000;
 function validateHash(hash, difficulty) {
     return hash.slice(0, difficulty).reduce(function (a, b) { return a + b; }, 0) === 0;
 }
@@ -24,10 +23,10 @@ if (worker_threads_1.isMainThread) {
 }
 else {
     worker_threads_1.parentPort === null || worker_threads_1.parentPort === void 0 ? void 0 : worker_threads_1.parentPort.on('message', function (event) {
-        var startNonce = event.startNonce, currentHash = event.currentHash, signerBytes = event.signerBytes, difficulty = event.difficulty, jobId = event.jobId;
+        var startNonce = event.startNonce, currentHash = event.currentHash, signerBytes = event.signerBytes, difficulty = event.difficulty, jobId = event.jobId, nonceRange = event.nonceRange;
         var nonce = BigInt(startNonce);
         var nonceCount = 0; // 全局计数器，用于跟踪处理的nonce数量
-        while (nonceCount < bulkSize) {
+        while (nonceCount < nonceRange) {
             nonceCount++;
             var hash = createHash(currentHash, signerBytes, nonce);
             var isValid = validateHash(hash, difficulty);

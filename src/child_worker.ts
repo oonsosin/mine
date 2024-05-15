@@ -1,7 +1,6 @@
 // mineWorker.ts
 // import { validateHash, createHash } from './common';
 import { keccak_256 } from '@noble/hashes/sha3';
-const bulkSize = 100000;
 function validateHash(hash: Uint8Array, difficulty: number) {
     return hash.slice(0, difficulty).reduce((a, b) => a + b, 0) === 0;
 }
@@ -20,6 +19,7 @@ function createHash(
     dataToHash.set(int64to8(nonce), 64);
     return keccak_256(dataToHash);
 }
+
 import { isMainThread, parentPort } from 'worker_threads';
 //NOTE: 用来判断当前线程是否是主线程
 if (isMainThread) {
@@ -31,10 +31,11 @@ if (isMainThread) {
             signerBytes,
             difficulty,
             jobId,
+            nonceRange,
         } = event;
         let nonce = BigInt(startNonce);
         let nonceCount = 0; // 全局计数器，用于跟踪处理的nonce数量
-        while (nonceCount < bulkSize) {
+        while (nonceCount < nonceRange) {
             nonceCount++;
             const hash = createHash(currentHash, signerBytes, nonce);
             const isValid = validateHash(hash, difficulty);

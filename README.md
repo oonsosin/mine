@@ -24,6 +24,9 @@ The frontend and CLI client for [Mineral](https://mineral.supply/).
 ### Build
 - `npm run build`
 
+### Compile
+- `npx tsc src/child_worker.ts`
+
 ### Start parallelly
 ```
 --threads nums
